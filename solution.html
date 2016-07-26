@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-size: 14px;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        p {
+            margin: 0 0 10px;
+        }
+
+        hr {
+            height: 0;
+            border: none;
+            border-bottom: 1px solid #eeeeee;
+            margin: 20px 0;
+        }
+
+        .option {
+            display: inline-block;
+            padding: 5px 20px;
+            text-align: center;
+            border: 1px solid #666;
+            background-color: transparent;
+            color: #666;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .option:not(.selected):hover {
+            border-color: dodgerblue;
+            color: dodgerblue;
+        }
+
+        .option.selected {
+            background-color: dodgerblue;
+            color: #ffffff;
+            border-color: dodgerblue;
+            transition: all 0.1s linear;
+        }
+
+        .primary {
+            font-size: 18px;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<h2>帮你选择一个合适的文件上传解决方案</h2>
+<hr>
+<p>1. 最低支持到哪个版本的浏览器</p>
+<p>
+    <span class="option" v-for="b in browsers" v-text="b.name" v-on:click="selectBrowser(b)" v-bind:class="{'selected': $index == browserValue}"></span>
+</p>
+<p>2. 上传方式</p>
+<p>
+    <span class="option" v-for="b in methods" v-text="b.name" v-on:click="selectMethod(b)" v-bind:class="{'selected': $index == methodValue}"></span>
+</p>
+<p>3. 是否跨域</p>
+<p>
+    <span class="option" v-for="b in crosses" v-text="b.name" v-on:click="selectCross(b)" v-bind:class="{'selected': $index == crossValue}"></span>
+</p>
+<p>4. 是否需要获得上传结果</p>
+<p>
+    <span class="option" v-for="b in responses" v-text="b.name" v-on:click="selectResponse(b)" v-bind:class="{'selected': $index == responseValue}"></span>
+</p>
+
+<h3>解决方案:</h3>
+<p class="primary">
+    <span v-text="solution"></span>
+</p>
+
+
+<script src="//cdn.bootcss.com/vue/1.0.26/vue.min.js"></script>
+<script>
+
+    var dataMap = {
+        '0000': 'Form',
+        '0001': 'Form',
+        '0010': 'Form',
+        '0011': 'Form',
+        '0100': 'Form + Iframe',
+        '0101': 'Form + Iframe',
+        '0110': 'Form + Iframe',
+        '0111': 'No Solution',
+        '1000': 'Form',
+        '1001': 'Form',
+        '1010': 'Form',
+        '1011': 'Form',
+        '1100': 'Form + Iframe',
+        '1101': 'Form + Iframe',
+        '1110': 'Form + Iframe',
+        '1111': 'Form + Iframe + postMessage',
+        '2000': 'Form',
+        '2001': 'Form',
+        '2010': 'Form',
+        '2011': 'Form',
+        '2100': 'XMLHttpRequest',
+        '2101': 'XMLHttpRequest',
+        '2110': 'XMLHttpRequest + CORS',
+        '2111': 'XMLHttpRequest + CORS'
+    };
+
+    var vm = new Vue({
+        el: 'body',
+        data: {
+            browsers: [
+                {name: 'IE 6/7'},
+                {name: 'IE 8/9'},
+                {name: 'IE 10+/Chrome/Firefox'}
+            ],
+            methods: [
+                {name: '同步'},
+                {name: '异步'}
+            ],
+            crosses: [
+                {name: '同域'},
+                {name: '跨域'}
+            ],
+            responses: [
+                {name: '不需要'},
+                {name: '需要'}
+            ],
+            browserValue: null,
+            methodValue: null,
+            crossValue: null,
+            responseValue: null
+        },
+        methods: {
+            selectBrowser: function(browser) {
+                this.browserValue = this.browsers.indexOf(browser);
+            },
+            selectMethod: function(method) {
+                this.methodValue = this.methods.indexOf(method);
+            },
+            selectCross: function(cross) {
+                this.crossValue = this.crosses.indexOf(cross);
+            },
+            selectResponse: function(response) {
+                this.responseValue = this.responses.indexOf(response);
+            }
+        },
+        computed: {
+            solution: function() {
+                var dataKey = [this.browserValue, this.methodValue, this.crossValue, this.responseValue].join('');
+                return dataMap[dataKey];
+            }
+        }
+    });
+</script>
+</body>
+</html>
